@@ -16,63 +16,10 @@
   --lavender: #E2D1F9; 
   --purple: #C9A7EB;
   --mint: #CBFFA9; 
-  --text: #333; /* Darker text color for better contrast */
+  --text: #5E5E5E;
   --gradient-1: linear-gradient(135deg, #FFD6EC 0%, #E2D1F9 50%, #C9A7EB 100%);
   --gradient-2: linear-gradient(45deg, #FFADCE 0%, #E2D1F9 100%);
   --gradient-3: linear-gradient(135deg, #C9A7EB 0%, #CBFFA9 100%);
-}
-
-/* Text Shadow for better readability */
-.greeting {
-  color: var(--pink-dark); 
-  font-size: 24px; 
-  margin-bottom: 15px;
-  font-weight: 500;
-  opacity: 0;
-  animation: slideInLeft 1s ease-out 0.2s forwards;
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3); /* Tambahkan ini */
-}
-
-.hero-title {
-  font-size: 56px; 
-  font-weight: 800; 
-  margin-bottom: 20px;
-  line-height: 1.2;
-  opacity: 0;
-  animation: slideInLeft 1s ease-out 0.4s forwards;
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3); /* Tambahkan ini */
-}
-
-.hero-subtitle {
-  font-size: 22px; 
-  margin-bottom: 40px;
-  opacity: 0.8;
-  opacity: 0;
-  animation: slideInLeft 1s ease-out 0.6s forwards;
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3); /* Tambahkan ini */
-}
-
-/* Background for sections with text */
-.container, .about-container, .contact-form, .contact-info, .card, .project-card {
-  background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
-  backdrop-filter: blur(20px);
-  border-radius: 30px; 
-  padding: 40px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-}
-
-/* Adjusting the button styles for better visibility */
-.btn {
-  background: var(--gradient-2);
-  color: white; /* Ensure button text is white for contrast */
-  box-shadow: 0 10px 30px rgba(255,173,206,0.3);
-}
-
-/* Adjusting the hover state of buttons */
-.btn-primary:hover {
-  background: var(--pink-dark); /* Darker background on hover */
-  box-shadow: 0 15px 40px rgba(255,173,206,0.5);
 }
 
 * {
@@ -562,7 +509,6 @@ nav {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3); /* Tambahkan ini */
 }
 
 .about-subtitle {
@@ -570,7 +516,6 @@ nav {
   color: var(--pink-dark); 
   margin-bottom: 25px;
   font-weight: 600;
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3); /* Tambahkan ini */
 }
 
 .about-text {
@@ -578,7 +523,6 @@ nav {
   line-height: 1.8;
   font-size: 16px;
   opacity: 0.9;
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3); /* Tambahkan ini */
 }
 
 /* Skills */
@@ -737,7 +681,6 @@ nav {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3); /* Tambahkan ini */
 }
 
 /* Contact Section */
@@ -1114,10 +1057,150 @@ footer {
 </footer>
 
 <script>
-// Your existing JavaScript
-</script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Skill bars animation
+  const skillBars = document.querySelectorAll('.skill-bar');
+  
+  function animateSkillBars() {
+    skillBars.forEach(bar => {
+      const width = bar.getAttribute('data-width');
+      bar.style.width = "0";
+      setTimeout(() => { 
+        bar.style.width = width; 
+      }, 500);
+    });
+  }
 
-<!-- Bootstrap Bundle with Popper - Added for Bootstrap 5.3.5 -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+  // Page navigation
+  window.showPage = function(pageId) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(page => {
+      page.classList.remove('active');
+      setTimeout(() => {
+        page.style.display = 'none';
+      }, 300);
+    });
+    
+    // Show selected page
+    setTimeout(() => {
+      const targetPage = document.getElementById(pageId);
+      targetPage.style.display = 'block';
+      setTimeout(() => {
+        targetPage.classList.add('active');
+      }, 50);
+      
+      // Animate skill bars if about page
+      if(pageId === 'about') {
+        setTimeout(() => {
+          animateSkillBars();
+        }, 600);
+      }
+    }, 300);
+    
+    // Update navigation
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.remove('active');
+    });
+    document.querySelector(`[href="#${pageId}"]`).classList.add('active');
+    
+    // Scroll to top
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  };
+
+  // Initialize
+  showPage('home');
+  
+  // Add scroll animations
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, observerOptions);
+
+  // Observe elements for scroll animations
+  document.querySelectorAll('.card, .project-card, .contact-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'all 0.6s ease';
+    observer.observe(el);
+  });
+
+  // Add hover sound effect simulation
+  document.querySelectorAll('.btn, .card, .project-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      el.style.transform = el.style.transform || '';
+    });
+  });
+
+  // Parallax effect for floating shapes
+  window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    const rate = scrolled * -0.5;
+    
+    document.querySelectorAll('.shape').forEach((shape, index) => {
+      const speed = (index + 1) * 0.3;
+      shape.style.transform = `translateY(${rate * speed}px) rotate(${scrolled * 0.1}deg)`;
+    });
+  });
+
+  // Enhanced button click effects
+  document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      let ripple = document.createElement('span');
+      ripple.classList.add('ripple');
+      this.appendChild(ripple);
+      
+      let x = e.clientX - this.offsetLeft;
+      let y = e.clientY - this.offsetTop;
+      
+      ripple.style.left = x + 'px';
+      ripple.style.top = y + 'px';
+      
+      setTimeout(() => {
+        ripple.remove();
+      }, 600);
+    });
+  });
+});
+
+// Add CSS for ripple effect
+const style = document.createElement('style');
+style.textContent = `
+  .btn {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+    pointer-events: none;
+  }
+  
+  @keyframes ripple-animation {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+  
+  .nav-link.active {
+    background: var(--gradient-2);
+    color: white;
+  }
+`;
+document.head.appendChild(style);
+</script>
 </body>
 </html>
